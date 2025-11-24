@@ -1,7 +1,7 @@
 # Multi-Stage Dockerfile for Java Application using Maven
 
 # Define base image for build stage
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.9.5-openjdk-21 AS build
 
 # Set working directory
 WORKDIR /app

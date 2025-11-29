@@ -1,1 +1,1 @@
-This app is a car park system, where users can enter license plate registrations as well as editing present data. Having been used for a previous module, it will be upgraded to use an sql database rather than a csv file.
+This app is a car park system, where users can enter license plate registrations as well as editing present data.

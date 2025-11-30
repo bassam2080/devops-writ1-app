@@ -14,7 +14,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Define base image for runtime stage
-FROM eclipse-temurin:17-jdk-slim
+FROM eclipse-temurin:21-jdk
 
 # Set working directory
 WORKDIR /app

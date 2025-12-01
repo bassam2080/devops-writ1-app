@@ -5,13 +5,14 @@
 package com.mycompany.main;
 import java.util.Scanner;
 import static java.lang.System.exit;
+import java.io.File;
 
 /**
  *
  * @author st20287200
  */
 public class Main {
-    public static String filePath = "CollegeCarPark\\new vrn.csv"; //File path to csv file
+    public static String filePath = "CollegeCarPark" + File.separator + "new vrn.csv"; //File path to csv file
     public static Scanner scanner; // Create a class-level scanner
 
     public static void main(String[] args) {

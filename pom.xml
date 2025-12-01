@@ -7,11 +7,11 @@
 
     <groupId>com.mycompany</groupId>
     <artifactId>CollegeCarPark</artifactId>
-    <version>1.0. 0</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>CollegeCarPark</name>
-    <description>College Car Park Management System</description>
+    <description>devops assignment car park system</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

@@ -3,7 +3,6 @@
 # Define base image for build stage
 FROM maven:3.9-eclipse-temurin-21 AS build
 
-# Set working directory
 WORKDIR /app
 
 # Copy pom.xml and source code

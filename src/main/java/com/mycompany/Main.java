@@ -2,17 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package com.mycompany.main;
+package com.mycompany;
+
 import java.util.Scanner;
+
 import static java.lang.System.exit;
-import java.io.File;
 
 /**
  *
  * @author st20287200
  */
 public class Main {
-    public static String filePath = "CollegeCarPark" + File.separator + "new vrn.csv"; //File path to csv file
+    public static String filePath = "newvrn.csv"; //File path to csv file
     public static Scanner scanner; // Create a class-level scanner
 
     public static void main(String[] args) {
@@ -55,7 +56,7 @@ public class Main {
     public static void recordMenu() {
         System.out.println("Please enter your VRN: ");
         String selection = scanner.nextLine(); // Use the class-level scanner
-        CarParkRecord myCarParkRecord = new CarParkRecord(filePath);
+        com.mycompany.CarParkRecord myCarParkRecord = new com.mycompany.CarParkRecord(filePath);
         myCarParkRecord.parseRecord(selection);
     }
 
@@ -71,16 +72,16 @@ public class Main {
 
         switch(selection) {
             case "1":
-                CarParkAdmin.displayData(filePath);
+                com.mycompany.CarParkAdmin.displayData(filePath);
                 break;
             case "2":
-                CarParkAdmin.searchVRN(filePath);
+                com.mycompany.CarParkAdmin.searchVRN(filePath);
                 break;
             case "3":
-                CarParkAdmin.amendLine(filePath);
+                com.mycompany.CarParkAdmin.amendLine(filePath);
                 break;
             case "4":
-                CarParkAdmin.deleteLine(filePath);
+                com.mycompany.CarParkAdmin.deleteLine(filePath);
                 break;
         }
     }

@@ -1,10 +1,16 @@
-package com.mycompany.test;
+package com.mycompany;
 
-import com.mycompany.main.CarParkAdmin;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import java.io.*;
-import java.nio.file.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for CarParkAdmin class functions accessible from the Admin Menu:
@@ -144,7 +150,7 @@ public class CarParkAdminTest {
 
     @Test
     @DisplayName("Menu Option 3: amendLine with invalid line number")
-    void testAmendLine_InvalidLineNumber() throws IOException {
+    void testAmendLine_InvalidLineNumber() {
         // Line number out of range
         String input = "999\nNEWVRN,2024-01-01,10:00:00\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
@@ -176,7 +182,7 @@ public class CarParkAdminTest {
 
     @Test
     @DisplayName("Menu Option 4: deleteLine with invalid line number")
-    void testDeleteLine_InvalidLineNumber() throws IOException {
+    void testDeleteLine_InvalidLineNumber() {
         // Line number out of range
         String input = "999\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
@@ -189,7 +195,7 @@ public class CarParkAdminTest {
 
     @Test
     @DisplayName("Menu Option 4: deleteLine with negative line number")
-    void testDeleteLine_NegativeLineNumber() throws IOException {
+    void testDeleteLine_NegativeLineNumber() {
         // Negative line number
         String input = "-1\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));

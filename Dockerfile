@@ -7,10 +7,10 @@ WORKDIR /app
 
 # Copy pom.xml and source code
 COPY pom.xml .
-COPY CollegeCarPark/src ./src
+COPY ./src ./src
 
 # Build the application
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # Define base image for runtime stage
 FROM eclipse-temurin:21-jdk
@@ -20,6 +20,7 @@ WORKDIR /app
 
 # Copy the jar file from build stage
 COPY --from=build /app/target/*.jar app.jar
+COPY ["newvrn.csv", "."]
 
 # Set the command to run the application
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,4 +1,4 @@
-package com.mycompany.main;
+package com.mycompany;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.*;
 
 
 

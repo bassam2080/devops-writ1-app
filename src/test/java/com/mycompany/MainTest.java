@@ -1,9 +1,14 @@
-package com.mycompany.test;
+package com.mycompany;
 
-import com.mycompany.main.Main;
 import org.junit.jupiter.api.*;
-import java.io.*;
-import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for Main class menu functions:

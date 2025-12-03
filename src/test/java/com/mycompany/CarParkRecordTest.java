@@ -1,9 +1,13 @@
-package com.mycompany.test;
+package com.mycompany;
 
-import com.mycompany.main.CarParkRecord;
 import org.junit.jupiter.api.*;
-import java.io.*;
-import java.nio.file.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -109,7 +113,7 @@ public class CarParkRecordTest {
 
     @Test
     @DisplayName("Record Mode: parseRecord handles empty VRN")
-    void testParseRecord_EmptyVRN() throws IOException {
+    void testParseRecord_EmptyVRN() {
         CarParkRecord record = new CarParkRecord(TEST_FILE_PATH);
 
         record.parseRecord("");

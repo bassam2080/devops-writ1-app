@@ -69,7 +69,7 @@ public class CarParkAdminTest {
     }
 
     @Test
-    @DisplayName("Menu Option 1: displayData with non-existent file should handle error")
+    @DisplayName("Menu Option 1: displayData with non-existent file should display error")
     void testDisplayData_NonExistentFile() {
         CarParkAdmin.displayData("nonexistent_file.csv");
         // Should not throw exception, error is printed to console

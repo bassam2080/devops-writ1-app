@@ -1,6 +1,7 @@
 package com.mycompany;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +15,12 @@ import java.util.Scanner;
 public class CarParkAdmin {
 
     public static void displayData(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.err.println("Error: File '" + filePath + "' does not exist.");
+            return;
+        }
+
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) { //Create a new reader object
             String line;
             while ((line = br.readLine()) != null) { //While each line is not empty

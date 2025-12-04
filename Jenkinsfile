@@ -21,7 +21,7 @@ pipeline {
 
     stage('Build and Run Tests') {
           steps {
-            sh 'docker build -t --name ${IMAGE_NAME} ${IMAGE_NAME} .'
+            sh 'docker build -t --name devops-assignment-app ${IMAGE_NAME} .'
             sh 'cd CollegeCarPark && mvn test'
           }
     }

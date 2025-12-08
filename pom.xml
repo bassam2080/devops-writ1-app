@@ -28,6 +28,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
         <!-- CSV parsing library (optional, if needed) -->
         <dependency>
             <groupId>org.apache.commons</groupId>

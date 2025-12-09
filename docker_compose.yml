@@ -6,4 +6,4 @@ services:
       dockerfile: Dockerfile
     container_name: devops-writ1-app
     ports:
-      - "8081:8080"
+      - "8080:8080"

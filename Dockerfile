@@ -6,11 +6,12 @@ FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy pom.xml and source code
+COPY settings.xml /root/.m2/settings.xml
 COPY pom.xml .
 COPY ./src ./src
 
 # Build the application
-RUN mvn clean package
+RUN mvn clean package -s /root/.m2/settings.xml
 
 # Define base image for runtime stage
 FROM eclipse-temurin:21-jdk

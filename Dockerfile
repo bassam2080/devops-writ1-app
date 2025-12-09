@@ -9,6 +9,9 @@ WORKDIR /app
 COPY pom.xml .
 COPY ./src ./src
 
+RUN apt-get update && apt-get install -y dnsmasq
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # Build the application
 RUN mvn clean package -DarchetypeRepository=https://repo1.maven.org/maven2
 

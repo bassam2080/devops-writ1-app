@@ -10,7 +10,7 @@ COPY pom.xml .
 COPY ./src ./src
 
 # Build the application
-RUN mvn clean package
+RUN mvn clean package -DarchetypeRepository=https://repo1.maven.org/maven2
 
 # Define base image for runtime stage
 FROM eclipse-temurin:21-jdk

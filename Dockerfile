@@ -20,6 +20,7 @@ ARG SKIP_TESTS=true
 
 # Build the application (run tests when SKIP_TESTS=false)
 RUN mvn -B -ntp -s /root/.m2/settings.xml clean package -DskipTests=${SKIP_TESTS}
+RUN test -d /app/target/surefire-reports && ls -la /app/target/surefire-reports || (echo "NO surefire reports found" && exit 1)
 
 # ---- Runtime stage ----
 FROM eclipse-temurin:21-jdk

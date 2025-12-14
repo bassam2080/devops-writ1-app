@@ -14,22 +14,27 @@ pipeline {
     stage('Checkout') {
       steps { checkout scm }
     }
-stage('Test (JUnit5)') {
-  steps {
-    sh '''
-      docker run --rm \
-        -v "$PWD":/app -w /app \
-        maven:3.9-eclipse-temurin-21 \
-        mvn -B -ntp test
-    '''
-  }
-  post {
-    always {
-      junit allowEmptyResults: false, testResults: 'target/surefire-reports/*.xml'
-    }
-  }
-}
+   stage('Test (JUnit5)') {
+      steps {
+        sh '''
+          set -e
+          REPO1_IP=$(getent ahostsv4 repo1.maven.org | awk 'NR==1{print $1}')
+          CENTRAL_IP=$(getent ahostsv4 repo.maven.apache.org | awk 'NR==1{print $1}')
 
+          docker run --rm \
+            --add-host repo1.maven.org:${REPO1_IP} \
+            --add-host repo.maven.apache.org:${CENTRAL_IP} \
+            -v "$PWD":/app -w /app \
+            maven:3.9-eclipse-temurin-21 \
+            mvn -B -ntp test
+        '''
+      }
+      post {
+        always {
+          junit allowEmptyResults: false, testResults: 'target/surefire-reports/*.xml'
+        }
+      }
+    }
      stage('Build (with tests)') {
   steps {
     script {

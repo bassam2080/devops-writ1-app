@@ -15,22 +15,33 @@ pipeline {
       steps { checkout scm }
     }
 
-    stage('Build (with tests)') {
-      steps {
-        script {
-          def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-          env.IMAGE_TAG = "${env.BUILD_NUMBER}-${shortCommit}"
-        }
-
-        sh '''
-          docker build \
-            --build-arg SKIP_TESTS=false \
-            -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} \
-            -t ${DOCKERHUB_IMAGE}:latest \
-            .
-        '''
-      }
+     stage('Build (with tests)') {
+  steps {
+    script {
+      def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+      env.IMAGE_TAG = "${env.BUILD_NUMBER}-${shortCommit}"
     }
+
+    sh '''
+      set -e
+
+      # Get IPv4 addresses (avoid IPv6)
+      REPO1_IP=$(getent ahostsv4 repo1.maven.org | awk 'NR==1{print $1}')
+      CENTRAL_IP=$(getent ahostsv4 repo.maven.apache.org | awk 'NR==1{print $1}')
+
+      echo "repo1.maven.org -> $REPO1_IP"
+      echo "repo.maven.apache.org -> $CENTRAL_IP"
+
+      docker build \
+        --build-arg SKIP_TESTS=false \
+        --add-host repo1.maven.org:${REPO1_IP} \
+        --add-host repo.maven.apache.org:${CENTRAL_IP} \
+        -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} \
+        -t ${DOCKERHUB_IMAGE}:latest \
+        .
+    '''
+  }
+}
 
     stage('Push to Docker Hub') {
       steps {

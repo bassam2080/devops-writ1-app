@@ -1,0 +1,87 @@
+ pipeline {
+  agent any
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+  }
+
+  environment {
+    DOCKERHUB_IMAGE = "bassam2080/collegecarpark"  // <-- replace this
+  }
+
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
+    stage('Test (JUnit5)') {
+      steps {
+        sh '''
+          docker run --rm \
+            -v "$PWD":/app -w /app \
+            maven:3.9-eclipse-temurin-21 \
+            mvn -B -ntp clean test
+        '''
+      }
+      post {
+        always {
+          junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+        }
+      }
+    }
+
+    stage('Package') {
+      steps {
+        sh '''
+          docker run --rm \
+            -v "$PWD":/app -w /app \
+            maven:3.9-eclipse-temurin-21 \
+            mvn -B -ntp package -DskipTests
+        '''
+      }
+      post {
+        success {
+          archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        script {
+          def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+          env.IMAGE_TAG = "${env.BUILD_NUMBER}-${shortCommit}"
+        }
+        sh '''
+          docker build \
+            -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} \
+            -t ${DOCKERHUB_IMAGE}:latest \
+            .
+        '''
+      }
+    }
+
+    stage('Push to Docker Hub') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'Dockerhub',
+                                          usernameVariable: 'DH_USER',
+                                          passwordVariable: 'DH_PASS')]) {
+          sh '''
+            echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin
+            docker push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
+            docker push ${DOCKERHUB_IMAGE}:latest
+            docker logout
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      sh 'docker image prune -f || true'
+    }
+  }
+}
+

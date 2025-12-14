@@ -16,14 +16,15 @@
     }
 
     stage('Test (JUnit5)') {
-      steps {
-        sh '''
-          docker run --rm \
-            -v "$PWD":/app -w /app \
-            maven:3.9-eclipse-temurin-21 \
-            mvn -B -ntp clean test
-        '''
-      }
+     steps {
+    sh '''
+      docker run --rm \
+        --dns 1.1.1.1 --dns 8.8.8.8 \
+        -v "$PWD":/app -w /app \
+        maven:3.9-eclipse-temurin-21 \
+        mvn -B -ntp clean test
+    '''
+  }
       post {
         always {
           junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'

@@ -1,4 +1,4 @@
- pipeline {
+pipeline {
   agent any
 
   options {
@@ -7,7 +7,7 @@
   }
 
   environment {
-    DOCKERHUB_IMAGE = "bassam2080/collegecarpark"  // <-- replace this
+    DOCKERHUB_IMAGE = "YOUR_DOCKERHUB_USER/collegecarpark"
   }
 
   stages {
@@ -15,47 +15,16 @@
       steps { checkout scm }
     }
 
-    stage('Test (JUnit5)') {
-     steps {
-    sh '''
-      docker run --rm \
-        --dns 1.1.1.1 --dns 8.8.8.8 \
-        -v "$PWD":/app -w /app \
-        maven:3.9-eclipse-temurin-21 \
-        mvn -B -ntp clean test
-    '''
-  }
-      post {
-        always {
-          junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
-        }
-      }
-    }
-
-    stage('Package') {
-      steps {
-        sh '''
-          docker run --rm \
-            -v "$PWD":/app -w /app \
-            maven:3.9-eclipse-temurin-21 \
-            mvn -B -ntp package -DskipTests
-        '''
-      }
-      post {
-        success {
-          archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-        }
-      }
-    }
-
-    stage('Build Docker Image') {
+    stage('Build (with tests)') {
       steps {
         script {
           def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
           env.IMAGE_TAG = "${env.BUILD_NUMBER}-${shortCommit}"
         }
+
         sh '''
           docker build \
+            --build-arg SKIP_TESTS=false \
             -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} \
             -t ${DOCKERHUB_IMAGE}:latest \
             .
@@ -65,7 +34,7 @@
 
     stage('Push to Docker Hub') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'Dockerhub',
+        withCredentials([usernamePassword(credentialsId: 'dockerhub',
                                           usernameVariable: 'DH_USER',
                                           passwordVariable: 'DH_PASS')]) {
           sh '''
@@ -85,4 +54,3 @@
     }
   }
 }
-

@@ -14,6 +14,21 @@ pipeline {
     stage('Checkout') {
       steps { checkout scm }
     }
+stage('Test (JUnit5)') {
+  steps {
+    sh '''
+      docker run --rm \
+        -v "$PWD":/app -w /app \
+        maven:3.9-eclipse-temurin-21 \
+        mvn -B -ntp test
+    '''
+  }
+  post {
+    always {
+      junit allowEmptyResults: false, testResults: 'target/surefire-reports/*.xml'
+    }
+  }
+}
 
      stage('Build (with tests)') {
   steps {

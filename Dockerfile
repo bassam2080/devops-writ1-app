@@ -1,28 +1,36 @@
-# Multi-Stage Dockerfile for Java Application using Maven
+ # Multi-Stage Dockerfile for Java Application using Maven
 
-# Define base image for build stage
+# ---- Build stage ----
 FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-# Copy pom.xml and source code
+# If you rely on a Maven mirror/proxy, keep this.
+# (Make sure settings.xml exists in the repo root)
 COPY settings.xml /root/.m2/settings.xml
+
+# Copy only pom first (better cache usage)
 COPY pom.xml .
+
+# Copy sources
 COPY ./src ./src
 
-# Build the application
-#RUN mvn clean package -s /root/.m2/settings.xml -DskipTests
-RUN mvn package -s /root/.m2/settings.xml -DskipTests
+# Allow CI to decide whether to skip tests
+ARG SKIP_TESTS=true
 
-# Define base image for runtime stage
+# Build the application (run tests when SKIP_TESTS=false)
+RUN mvn -B -ntp -s /root/.m2/settings.xml clean package -DskipTests=${SKIP_TESTS}
+
+# ---- Runtime stage ----
 FROM eclipse-temurin:21-jdk
 
-# Set working directory
 WORKDIR /app
 
-# Copy the jar file from build stage
+# Copy the jar from build stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Your CSV
 COPY ["newvrn.csv", "."]
 
-# Set the command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
